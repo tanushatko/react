@@ -1,0 +1,146 @@
+var ToDoInput = React.createClass({
+  addTask: function(e) {
+    var newthing = document.getElementById('new-task').value;
+    if (newthing) {
+      this.props.addToDo(newthing);
+    };
+    
+    document.getElementById('new-task').value = '';
+    
+    e.preventDefault();
+  },
+  render: function() {
+    return (
+      <form onSubmit={this.addTask}>
+        <input type="text" id="new-task" placeholder="new programmer" />
+        <input type='submit' className="btn" value="Add" />
+      </form>
+    )
+  }
+});
+
+var FinishedList = React.createClass({
+  render: function() {
+    var endTasks = this.props.completedTasks.map(function(task, index) {
+      return (
+        <li key={index} className="finished">{task}</li>
+      )
+    });
+    return (
+      <div>
+        <ul>
+          {endTasks}
+        </ul>
+        <form onSubmit={this.props.clear}>
+          <input type='submit' className="btn" value="Clear" />
+        </form>
+      </div>
+    )
+  }
+})
+
+var ToDoList = React.createClass({
+  render: function() {
+    var newToDos = this.props.todos.map(function(todo, index) {
+      return (
+        <li key={index}>
+          <input className="check-done" type="checkbox" />
+          <span className="todo-span">{todo}</span>
+        </li>
+      )
+    });
+    return(
+      <div>
+        <ul>
+          {newToDos}
+        </ul>
+        <form onSubmit={this.props.moveDone}>
+           <input className="btn" type="submit" value="Move to Favorites &#10084; &#8594;" />
+         </form>
+      </div>
+    )
+  }
+});
+
+var ToDoBox = React.createClass({
+  getInitialState: function() {
+    return {
+      items: [
+        "Nazar Voitovych, PI-15-2",
+        "Virliana Tymkiv, PI-15-2",
+        "Misha Push, PI-15-1"
+      ],
+      done: ["Tetiana Petrosaniak, PI-15-2"]
+    }
+  },
+  addToDo: function(todo) {
+    this.setState({
+      items: this.state.items.concat([todo])
+    });
+  },
+  clearFinished: function(e) {
+    e.preventDefault();
+    
+    this.setState({
+      done: []
+    });
+  },
+  moveToCompleted: function(e) {
+    var finished = document.getElementsByClassName('check-done');
+    var newItems = [];
+    var newDone = this.state.done;
+    
+    e.preventDefault();
+    
+    Array.prototype.forEach.call(finished, function(box) {
+      var isChecked = box.checked;
+      var siblingSpan = box.parentElement.getElementsByClassName('todo-span');
+      
+      if (isChecked === true) {
+        var todo = siblingSpan[0].innerHTML;
+        newDone.push(todo);
+      }
+      else {
+        var todo = siblingSpan[0].innerHTML;
+        newItems.push(todo);
+      }
+    });
+    
+    this.setState({
+      items: newItems,
+      done: newDone
+    });
+    
+    // make sure all checkboxes left in 'To Do' are unchecked
+    var allChecks = document.getElementsByClassName('check-done');
+    
+    Array.prototype.forEach.call(finished, function(box) {
+      box.checked = false;
+    });
+  },
+  render: function() {
+    return (
+      <div className="inside-app">
+        <div className="task-model">
+          <h1>LIST OF PROGRAMMERS</h1>
+          <ToDoList className="toDoList" todos={this.state.items} moveDone={this.moveToCompleted} />
+        </div>
+        <div className="input-area">
+          <h3>Add New Programmer</h3>
+          <ToDoInput addToDo={this.addToDo} />
+          
+          <div className="completed-tasks">
+            <h3>Favorites</h3>
+            <FinishedList completedTasks={this.state.done} clear={this.clearFinished} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+});
+
+ReactDOM.render(
+  <ToDoBox />,
+  document.getElementById('app')
+);
+

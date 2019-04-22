@@ -1,0 +1,124 @@
+$mainText: #011627;
+$fadedText: grayscale(lighten($mainText, 50%));
+
+$mainBack: #EFFFE9;
+$accent1: #2EC4B6;
+$accent2: #E71D36;
+
+.heading {
+  color: $mainBack;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+.finished {
+  color: #030303;  
+}
+.btn {
+  background-color: $accent1;
+  border: 2px solid $accent1;
+  border-radius: 0.5em;
+  color: $mainText;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  margin-left: 1%;
+}
+#app {
+  background-color: $mainBack;
+  color: $mainText;
+  font-family: Lato;
+  margin: 0 auto;
+  width: 100%;
+}
+.inside-app {
+  align-content: center;
+  align-items: flex-start;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  width: 90%;
+}
+.task-model, .input-area {
+  border-radius: 0.25em;
+  min-height: 25em;
+  margin: 1%;
+  padding: 2% 5%;
+  width: 45%;
+}
+.task-model {
+  background-color: $accent2; 
+  h1 {
+    @extend .heading;
+  }
+  .btn {
+    padding: 2%;
+  }
+}
+.input-area {
+  background-color: $accent1;  
+  h3 {
+    @extend .heading;
+  }
+  input {
+    background-color: $mainBack;
+    border-radius: 0.3em;
+    padding: 1.5% 2%;
+    
+    &.btn {      
+      background-color: $accent2;
+      border: 2px solid $accent2;
+      color: $mainBack;
+    }
+  }
+}
+
+ul {
+  background-color: $mainBack;
+  border-radius: 0.25em;
+  list-style-type: none;
+  min-width: 15em;
+  max-width: 90%;
+  padding: 5%;
+  
+  li {
+    margin-bottom: 0.5em;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .todo-span {
+      transition: color 0.75s, text-decoration 0.2s;
+    }
+    
+    input[type='checkbox'] {
+      display: inline-block;
+      cursor: poiner;
+      margin-right: 0.5em;
+      opacity: 0;
+      
+      & + .todo-span:before {
+        border: 1px solid $mainText;
+        border-radius: 0.75em;
+        content: '';
+        display: inline-block;
+        height: 1em;
+        padding: 0.5%;
+        margin: 0 0.5em 0 -1.5em;
+        vertical-align: middle;
+        width: 1em;
+        
+        //transition: all 0.5s;
+      }
+      
+      &:checked + span {
+        @extend .finished;
+      }
+      
+      &:checked + .todo-span:before {
+        border-color: $fadedText;
+        content: "\f00c";
+        font-family: "FontAwesome";
+      }
+    }
+  }
+}
